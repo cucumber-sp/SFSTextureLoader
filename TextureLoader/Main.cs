@@ -46,8 +46,6 @@ namespace TextureLoader
             var ShadowTexturesFolder = TextureLoaderFolder.CloneAndExtend("ShadowTextures").CreateFolder();
             var ShapeTexturesFolder = TextureLoaderFolder.CloneAndExtend("ShapeTextures").CreateFolder();
 
-
-
             var serializer = JsonSerializer.CreateDefault(new JsonSerializerSettings()
             {
                 MaxDepth = 10,
@@ -66,7 +64,7 @@ namespace TextureLoader
             {
                 try
                 {
-                    string configString = File.ReadAllText(path.CloneAndExtend("config.txt"));
+                    string configString = path.ExtendToFile("config.txt").ReadText();
                     JObject configJson = JObject.Parse(configString);
                     var name = configJson["name"].ToString();
 
@@ -84,11 +82,15 @@ namespace TextureLoader
 
                         Debug.Log($"ColorTexture \"{name}\" was loaded");
                     }
+                    else
+                    {
+                        Debug.LogWarning($"ColorTexture \"{name}\" already exists");
+                    }
                 }
                 catch (Exception e)
                 {
-                    Debug.Log("Failed to load: " + path);
-                    Debug.Log(e);
+                    Debug.LogError("Failed to load: " + path);
+                    Debug.LogError(e);
                 }
             }
 
@@ -98,11 +100,11 @@ namespace TextureLoader
             {
                 try
                 {
-                    string configString = File.ReadAllText(path.CloneAndExtend("config.txt"));
+                    string configString = path.ExtendToFile("config.txt").ReadText();
                     JObject configJson = JObject.Parse(configString);
                     var name = configJson["name"].ToString();
 
-                    if (!colorTextures.ContainsKey(name))
+                    if (!shadowTextures.ContainsKey(name))
                     {
                         var shadowTexture = ScriptableObject.CreateInstance<ShadowTexture>();
                         shadowTexture.name = name;
@@ -115,11 +117,15 @@ namespace TextureLoader
 
                         Debug.Log($"ShadowTexture \"{name}\" was loaded");
                     }
+                    else
+                    {
+                        Debug.LogWarning($"ShadowTexture \"{name}\" already exists");
+                    }
                 }
                 catch (Exception e)
                 {
-                    Debug.Log("Failed to load: " + path);
-                    Debug.Log(e);
+                    Debug.LogError("Failed to load: " + path);
+                    Debug.LogError(e);
                 }
             }
 
@@ -127,11 +133,11 @@ namespace TextureLoader
             {
                 try
                 {
-                    string configString = File.ReadAllText(path.CloneAndExtend("config.txt"));
+                    string configString = path.ExtendToFile("config.txt").ReadText();
                     JObject configJson = JObject.Parse(configString);
                     var name = configJson["name"].ToString();
 
-                    if (!colorTextures.ContainsKey(name))
+                    if (!shapeTextures.ContainsKey(name))
                     {
                         var shapeTexture = ScriptableObject.CreateInstance<ShapeTexture>();
                         shapeTexture.name = name;
@@ -149,13 +155,17 @@ namespace TextureLoader
                         
                         shapeTextures.Add(shapeTexture.name, shapeTexture);
 
-                        Debug.Log($"ShadowTexture \"{name}\" was loaded");
+                        Debug.Log($"ShapeTexture \"{name}\" was loaded");
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"ShapeTexture \"{name}\" already exists");
                     }
                 }
                 catch (Exception e)
                 {
-                    Debug.Log("Failed to load: " + path);
-                    Debug.Log(e);
+                    Debug.LogError("Failed to load: " + path);
+                    Debug.LogError(e);
                 }
             }
         }
